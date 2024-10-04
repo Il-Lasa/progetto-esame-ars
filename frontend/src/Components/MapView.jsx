@@ -70,6 +70,8 @@ function MapView({ stations, selectedStationId }) {
             <Popup>
               <strong>{station.denominazione}</strong><br />
               {station.comune}, {station.provincia}
+              {/* Valore quality index */}
+              {/* Bottone per vedere grafici su ub certo inquinante */}
             </Popup>
           </Marker>
         );
