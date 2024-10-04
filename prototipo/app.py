@@ -1,12 +1,15 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS  # Importa flask-cors
+import os
+
+basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 app = Flask(__name__)
 CORS(app)  # Abilita CORS per tutte le rotte
 
 # Configurazione del database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/lasa/Documents/UNIUPO/ARS/progetto-esame/arpa.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "arpa.db")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)

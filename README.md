@@ -45,7 +45,7 @@ Questa webapp è progettata per monitorare la qualità dell'aria in diverse citt
 4. Il server sarà disponibile su `http://127.0.0.1:5000`.
 
 ### Frontend (React)
-1. Vai nella cartella del progetto React.
+1. Vai nella cartella del progetto React (prototipo).
 2. Installa le dipendenze con:
    ```bash
    npm install
