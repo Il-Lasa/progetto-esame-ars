@@ -3,10 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS  # Importa flask-cors
 import os
 
-basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-
 app = Flask(__name__)
-CORS(app)  # Abilita CORS per tutte le rotte
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})  # Abilita CORS per tutte le rotte
+
+basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 # Configurazione del database
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "arpa.db")}'
