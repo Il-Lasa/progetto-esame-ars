@@ -39,6 +39,13 @@ class Station(db.Model):
     paese = db.Column(db.String)
     paese_esteso = db.Column(db.String)
 
+class Pollutant(db.Model):
+    __bind_key__ = 'arpa'  
+    __tablename__ = 'pollutants'
+    inquinante_misurato = db.Column(db.String, primary_key=True)  
+    limite = db.Column(db.Float)  
+    unita_misura = db.Column(db.String) 
+
 class Measurement(db.Model):
     __bind_key__ = 'arpa'
     __tablename__ = 'measurements'
@@ -115,6 +122,11 @@ def get_stations():
         'comune': station.comune,
         'provincia': station.provincia
     } for station in stations])
+
+@app.route('/api/pollutants', methods=['GET'])
+def get_pollutants():
+    pollutants = Pollutant.query.with_entities(Pollutant.inquinante_misurato).distinct().all()
+    return jsonify([pollutant[0] for pollutant in pollutants]), 200
 
 @app.route('/api/measurements', methods=['GET'])
 def get_measurements():
@@ -277,6 +289,44 @@ def latest_measurements():
     else:
         conn.close()
         return jsonify({"message": "Nessun dato disponibile"}), 404
+    
+@app.route('/api/station_measurements', methods=['GET'])
+def station_measurements():
+    station_id = request.args.get('station_id')
+    inquinante = request.args.get('inquinante')
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+    compare_station_id = request.args.get('compare_station_id')
+
+    conn = sqlite3.connect('arpa.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT data_rilevazione, valore_inquinante_misurato
+        FROM measurements
+        WHERE id_station = ? AND inquinante_misurato = ? AND data_rilevazione BETWEEN ? AND ?
+        ORDER BY data_rilevazione
+    ''', (station_id, inquinante, start_date, end_date))
+    
+    measurements = [{"data": row[0], "valore": row[1]} for row in cursor.fetchall()]
+
+    compare_measurements = []
+    if compare_station_id:
+        cursor.execute('''
+            SELECT data_rilevazione, valore_inquinante_misurato
+            FROM measurements
+            WHERE id_station = ? AND inquinante_misurato = ? AND data_rilevazione BETWEEN ? AND ?
+            ORDER BY data_rilevazione
+        ''', (compare_station_id, inquinante, start_date, end_date))
+        
+        compare_measurements = [{"data": row[0], "valore": row[1]} for row in cursor.fetchall()]
+
+    conn.close()
+
+    return jsonify({
+        "measurements": measurements,
+        "compare_measurements": compare_measurements
+    }), 200
 
 
 if __name__ == '__main__':
