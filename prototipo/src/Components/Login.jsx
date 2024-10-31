@@ -12,7 +12,7 @@ function Login({ onLogin }) {
     e.preventDefault();
     setError('');
 
-    axios.post('http://localhost:5000/api/login', {
+    axios.post('/api/login', {
       email,
       password
     })
@@ -25,6 +25,7 @@ function Login({ onLogin }) {
         navigate('/');
       })
       .catch(error => {
+        console.error("Errore di login:", error);
         setError('Email o password errati.');
       });
   };

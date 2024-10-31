@@ -3,7 +3,6 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useState, useEffect } from 'react';
 
-// Configura l'icona predefinita di Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
@@ -31,38 +30,32 @@ function MapView({ stations, selectedStationId }) {
   });
 
   return (
-    <MapContainer center={[40.66, 17.94]} zoom={8} scrollWheelZoom={false} style={{ height: '400px', width: '100%' }}>
+    <MapContainer center={[40.66, 17.94]} zoom={8} scrollWheelZoom={false} style={{ height: '400px', width: '100%', zIndex: 0 }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       {stations.map(station => {
-        // Verifica se le coordinate sono presenti e nel formato corretto
         if (!station.coordinates) {
           console.error(`Stazione ${station.id_station} non ha coordinate valide.`);
           return null;
         }
 
-        // Rimuove le parentesi quadre e converte le coordinate in numeri
         const coordinates = station.coordinates
           .replace('[', '')
           .replace(']', '')
           .split(',')
           .map(coord => parseFloat(coord.trim()));
 
-        // Inverti l'ordine delle coordinate (prima latitudine, poi longitudine)
         const latLng = [coordinates[1], coordinates[0]];
 
-        // Verifica che entrambe le coordinate siano numeri validi
         if (isNaN(latLng[0]) || isNaN(latLng[1])) {
           console.error(`Coordinate non valide per la stazione ${station.id_station}: ${station.coordinates}`);
           return null;
         }
 
-        // Determina se la stazione è quella selezionata
         const isSelected = station.id_station === selectedStationId;
 
-        // Scegli l'icona: se selezionata usa l'icona normale, altrimenti usa quella ridotta
         const markerIcon = isSelected || !selectedStationId ? defaultIcon : smallIcon;
 
         return (
@@ -70,8 +63,6 @@ function MapView({ stations, selectedStationId }) {
             <Popup>
               <strong>{station.denominazione}</strong><br />
               {station.comune}, {station.provincia}
-              {/* Valore quality index */}
-              {/* Bottone per vedere grafici su ub certo inquinante */}
             </Popup>
           </Marker>
         );

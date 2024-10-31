@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-ro
 import Home from './Components/Home';
 import Register from './Components/Register';
 import Login from './Components/Login';
+import Profile from './Components/Profile';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -35,12 +36,13 @@ function App() {
           {/* Se l'utente è loggato, mostra la Home, altrimenti reindirizza */}
           <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/register" />} />
 
-          {/* Route per la registrazione */}
           <Route path="/register" element={<Register onRegister={handleLogin} />} />
 
-          {/* Route per il login */}
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
+
+          <Route path="/profile" element={isAuthenticated ? <Profile onLogout={handleLogout} /> : <Navigate to="/login" />} />
         </Routes>
+
 
         <footer className="bg-darkGray text-white p-6 text-center">
           <p>© 2024 Qualità dell'Aria Puglia</p>
