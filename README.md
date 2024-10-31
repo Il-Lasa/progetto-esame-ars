@@ -8,7 +8,7 @@ L'applicazione consente di visualizzare le stazioni di monitoraggio su una mappa
 
 ### Backend (Flask)
 
-1. Andare nella cartella contenente il file `app.py`.
+1. Andare nella cartella prototipo contenente il file `app.py`.
 2. Installare l'environment conda con i pacchetti necessari:
    ```bash
    conda env create -f environment.yml
