@@ -8,7 +8,7 @@ function Profile({ onLogout }) {
   useEffect(() => {
     const token = localStorage.getItem('access_token');
 
-    axios.get('http://localhost:5000/api/profile', {
+    axios.get('/api/profile', {
       headers: {
         Authorization: `Bearer ${token}`
       }
